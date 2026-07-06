@@ -159,7 +159,7 @@ class TRIAX190(InstrumentTemplate):
 				self.set_status(Status.READY)
 			else:
 				return False
-		if abs(int(self.get_wavelength()) - wavelength) > 2:
+		if abs(float(self.get_wavelength()) - wavelength) > 2:
 			print(self.name + ": Potential motor stall, wavelength significantly different from set point")
 			return False
 		return True
