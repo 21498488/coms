@@ -8,7 +8,8 @@ class TRIAX190(InstrumentTemplate):
 
 	# nm
 	WL_MIN = 0
-	WL_MAX = 2600
+	WL_MAX = 6000
+	WL_SCALE = 4.0
 
 	SETTINGS_MIRROR_EXIT = {
 		0: "FRONT/AXIAL",
@@ -148,7 +149,7 @@ class TRIAX190(InstrumentTemplate):
 			return False
 		if wavelength < self.WL_MIN or wavelength > self.WL_MAX:
 			return False
-		if self.command("Z61,1," + str(wavelength) + "\r", size=1) != "o":
+		if self.command("Z61,1," + str(wavelength / WL_SCALE) + "\r", size=1) != "o":
 			return False
 		while not self.check_motor_stopped():
 			#Do not allow interrupts while sleeping
@@ -219,7 +220,7 @@ class TRIAX190(InstrumentTemplate):
 	def get_wavelength(self):
 		value = self.command("Z62,1\r", until="\r")
 		if value:
-			return value.strip()[1:]
+			return (float(value.strip()[1:]) * WL_SCALE)
 		else:
 			return value
 	
